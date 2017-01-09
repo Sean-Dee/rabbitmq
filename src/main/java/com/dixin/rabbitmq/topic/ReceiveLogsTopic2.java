@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by dixin on 17/1/7.
  */
-public class ReceiveLogsTopic1 {
+public class ReceiveLogsTopic2 {
 
     private static final String EXCHANGE_NAME = "topic_logs";
 
@@ -20,14 +20,14 @@ public class ReceiveLogsTopic1 {
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
         String queueName = channel.queueDeclare().getQueue();
         // 路由关键字
-        String[] routingKeys = new String[] { "*.orange.*" };
+        String[] routingKeys = new String[] { "*.*.rabbit", "lazy.#" };
         // 绑定路由关键字
         for (String key : routingKeys) {
             channel.queueBind(queueName, EXCHANGE_NAME, key);
-            System.out.println("ReceiveLogsTopic1 exchange:" + EXCHANGE_NAME + ", queue:"
+            System.out.println("ReceiveLogsTopic2 exchange:" + EXCHANGE_NAME + ", queue:"
                                + queueName + ", BindRoutingKey:" + key);
         }
-        System.out.println("ReceiveLogsTopic1 [*] Waiting for messages. To exit press CTRL+C");
+        System.out.println("ReceiveLogsTopic2 [*] Waiting for messages. To exit press CTRL+C");
 
         Consumer consumer = new DefaultConsumer(channel) {
             @Override
@@ -35,7 +35,7 @@ public class ReceiveLogsTopic1 {
                                        AMQP.BasicProperties properties,
                                        byte[] body) throws IOException {
                 String message = new String(body, "UTF-8");
-                System.out.println("ReceiveLogsTopc1 [x] received '" + envelope.getRoutingKey()
+                System.out.println("ReceiveLogsTopc2 [x] received '" + envelope.getRoutingKey()
                                    + "':'" + message + "'");
             }
         };
